@@ -10,17 +10,15 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CreateUserDto } from './dto/createUserDTO';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { loginUserDTO } from './dto/LoginUserDTO';
 import { updateUserDTO } from './dto/updateUserDTO';
+import tokenService from 'src/token/token.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
-    private jwt: JwtService,
+    private tokenService: tokenService,
   ) {}
   private readonly SALT_ROUNDS = 10;
 
@@ -44,12 +42,9 @@ export class UserService {
           createdAt: new Date(),
         },
       });
-      const access_token = await this.signToken(newUser.id);
-      const data = { ...newUser, access_token: access_token.access_token };
-
       return {
         status: 201,
-        data: data,
+        data: newUser,
         message: 'Create User SuccessFully',
       };
     } catch (error) {
@@ -71,22 +66,6 @@ export class UserService {
     return bcrypt.compare(password, userPassword);
   }
 
-  async signToken(userId: number): Promise<{ access_token: string }> {
-    const payload = {
-      sub: userId,
-    };
-
-    const secret = this.configService.get<string>('JWT_SECRET');
-    const token = await this.jwt.signAsync(payload, {
-      secret: secret,
-      expiresIn: '7d',
-    });
-
-    return {
-      access_token: token,
-    };
-  }
-
   async login(dto: loginUserDTO) {
     const { email, password } = dto;
     try {
@@ -104,13 +83,25 @@ export class UserService {
         throw new UnauthorizedException('Invalid email or password');
       }
 
-      const access_token = await this.signToken(user.id);
+      const access_token = this.tokenService.signToken(user.id).access_token;
+      const payload = this.tokenService.signRefreshToken(user.id);
 
       const data = {
         fullname: user.fullname,
         email: user.email,
-        access_token: access_token.access_token,
+        access_token: access_token,
       };
+
+      await this.prisma.session.create({
+        data: {
+          user_id: user.id,
+          device: 'chrome',
+          refresh_token: payload.refresh_token,
+          exp: payload.exp,
+          revoked: true,
+          createdAt: new Date(),
+        },
+      });
 
       return {
         status: 200,

@@ -23,7 +23,7 @@ model User {
 
   senderId Message[] @relation("SentMessages")
   receiverId Message[] @relation("ReceiveMessages")
-
+  sessions Session[] @relation("Session")
   createdAt DateTime @default(now())
   updatedAt DateTime?
   deletedAt DateTime?
@@ -44,4 +44,17 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime?
   deletedAt DateTime?
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+  device String
+
+  user_id Int
+  userSession User @relation("Session" ,fields: [user_id], references: [id])
+
+  refresh_token String
+  exp Float // Time of token
+  revoked Boolean @default(false)
+  createdAt DateTime @default(now())
 }
