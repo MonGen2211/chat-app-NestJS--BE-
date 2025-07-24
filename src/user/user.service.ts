@@ -83,7 +83,9 @@ export class UserService {
         throw new UnauthorizedException('Invalid email or password');
       }
 
+      // tạo access_token
       const access_token = this.tokenService.signToken(user.id).access_token;
+      // tạo refresh_token
       const payload = this.tokenService.signRefreshToken(user.id);
 
       const data = {
