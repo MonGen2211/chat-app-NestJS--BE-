@@ -23,6 +23,8 @@ model User {
 
   senderId Message[] @relation("SentMessages")
   receiverId Message[] @relation("ReceiveMessages")
+  hanstag Hanstag[]
+
   sessions Session[] @relation("Session")
   createdAt DateTime @default(now())
   updatedAt DateTime?
@@ -48,7 +50,8 @@ model Message {
 
 model Session {
   id Int @id @default(autoincrement())
-  device String
+  device_id Int
+  device Device @relation(fields: [device_id], references: [id])
 
   user_id Int
   userSession User @relation("Session" ,fields: [user_id], references: [id])
@@ -57,4 +60,39 @@ model Session {
   exp Float // Time of token
   revoked Boolean @default(false)
   createdAt DateTime @default(now())
+}
+
+model Device {
+  id Int @id @default(autoincrement())
+
+  name String
+  session Session[]
+}
+
+model Blog {
+  id Int @id @default(autoincrement())
+
+  description String 
+  pic_of_blog String
+
+  hanstags Hanstag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+}
+
+model comment {
+  id Int @id @default(autoincrement())
+}
+
+model Hanstag {
+  id Int @id @default(autoincrement())
+
+  name String
+  blog_id Int
+  blog Blog @relation(fields: [blog_id], references: [id])
+
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
 }
