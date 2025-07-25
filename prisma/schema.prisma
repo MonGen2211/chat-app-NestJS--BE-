@@ -24,6 +24,7 @@ model User {
   senderId Message[] @relation("SentMessages")
   receiverId Message[] @relation("ReceiveMessages")
   hanstag Hanstag[]
+  Blogs Blog[]
 
   sessions Session[] @relation("Session")
   createdAt DateTime @default(now())
@@ -72,10 +73,14 @@ model Device {
 model Blog {
   id Int @id @default(autoincrement())
 
+  header String @unique
   description String 
-  pic_of_blog String
+  pic_of_blog String?
 
   hanstags Hanstag[]
+
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime?

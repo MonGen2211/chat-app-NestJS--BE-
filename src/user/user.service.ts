@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { loginUserDTO } from './dto/LoginUserDTO';
 import { updateUserDTO } from './dto/updateUserDTO';
 import tokenService from 'src/token/token.service';
-
+import * as userAgent from 'useragent';
 @Injectable()
 export class UserService {
   constructor(
@@ -66,6 +66,7 @@ export class UserService {
     return bcrypt.compare(password, userPassword);
   }
 
+  // todo: update later
   async login(dto: loginUserDTO) {
     const { email, password } = dto;
     try {
@@ -83,10 +84,14 @@ export class UserService {
         throw new UnauthorizedException('Invalid email or password');
       }
 
+      // const userAgent = this.getDeviceInfo(ua);
+
+      // console.log(userAgent);
+
       // tạo access_token
       const access_token = this.tokenService.signToken(user.id).access_token;
       // tạo refresh_token
-      const payload = this.tokenService.signRefreshToken(user.id);
+      // const payload = this.tokenService.signRefreshToken(user.id);
 
       const data = {
         fullname: user.fullname,
@@ -94,16 +99,16 @@ export class UserService {
         access_token: access_token,
       };
 
-      await this.prisma.session.create({
-        data: {
-          user_id: user.id,
-          device: 'chrome',
-          refresh_token: payload.refresh_token,
-          exp: payload.exp,
-          revoked: true,
-          createdAt: new Date(),
-        },
-      });
+      // await this.prisma.session.create({
+      //   data: {
+      //     user_id: user.id,
+      //     device_id: 1,
+      //     refresh_token: payload.refresh_token,
+      //     exp: payload.exp,
+      //     revoked: true,
+      //     createdAt: new Date(),
+      //   },
+      // });
 
       return {
         status: 200,
@@ -160,5 +165,10 @@ export class UserService {
 
       throw error;
     }
+  }
+
+  getDeviceInfo(userAgentString: string) {
+    const agent = userAgent.parse(userAgentString);
+    return agent;
   }
 }

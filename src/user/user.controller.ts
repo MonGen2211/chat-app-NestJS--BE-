@@ -1,16 +1,10 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Put,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUserDTO';
 import { loginUserDTO } from './dto/LoginUserDTO';
 import { AuthGuard } from './auth.guard';
 import { updateUserDTO } from './dto/updateUserDTO';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -22,14 +16,16 @@ export class UserController {
   }
 
   @Post('/login')
+  // , @Req() req: Request
   login(@Body() dto: loginUserDTO) {
+    // const ua: string = (req.headers['user-agent'] as string) || '';
     return this.userService.login(dto);
   }
 
   @UseGuards(AuthGuard)
   @Put('/')
   update(
-    @Request() req: Request & { user: { sub: number } },
+    @Req() req: Request & { user: { sub: number } },
     @Body() dto: updateUserDTO,
   ) {
     const user = req.user;

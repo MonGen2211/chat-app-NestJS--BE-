@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { MessageModule } from './message/message.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { MessageModule } from './message/message.module';
       isGlobal: true, // dùng được ở mọi nơi
     }),
     MessageModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
