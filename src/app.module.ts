@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { MessageModule } from './message/message.module';
 import { BlogModule } from './blog/blog.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BlogModule } from './blog/blog.module';
     }),
     MessageModule,
     BlogModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -5,7 +5,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
@@ -39,6 +39,10 @@ export class AuthGuard implements CanActivate {
 
       request['user'] = payload;
     } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException('Phiên đăng nhập đã hết hạn');
+      }
+
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
