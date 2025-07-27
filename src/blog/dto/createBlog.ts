@@ -7,8 +7,4 @@ export default class createBlog {
   @IsNotEmpty()
   @IsString()
   description: string;
-
-  @IsNotEmpty()
-  @IsString()
-  pic_of_blog: string;
 }

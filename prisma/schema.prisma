@@ -75,7 +75,7 @@ model Blog {
 
   header String @unique
   description String 
-  pic_of_blog String?
+  pic_of_blog String
 
   hanstags Hanstag[]
 
