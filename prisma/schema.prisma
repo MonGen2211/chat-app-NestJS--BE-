@@ -13,6 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  SAD
+  ANGRY
+}
+
 model User {
   id Int @id @default(autoincrement())
   email String @unique
@@ -25,6 +33,8 @@ model User {
   receiverId Message[] @relation("ReceiveMessages")
   hanstag Hanstag[]
   Blogs Blog[]
+  statuss Status[]
+  reacts React[]
 
   sessions Session[] @relation("Session")
   createdAt DateTime @default(now())
@@ -78,13 +88,39 @@ model Blog {
   pic_of_blog String
 
   hanstags Hanstag[]
-
+  reacts React[]
   user_id Int
   user User @relation(fields: [user_id], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime?
   deletedAt DateTime?
+}
+
+model Status {
+  id Int @id @default(autoincrement())
+
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
+  text String
+  pic_of_status String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime? 
+}
+
+model React {
+  id Int @id @default(autoincrement())
+
+  blog_id Int
+  blog Blog @relation(fields: [blog_id], references: [id])
+
+  user_id Int 
+  user User @relation(fields: [user_id], references: [id])
+
+  type ReactionType?
+  createdAt DateTime
 }
 
 model comment {
