@@ -9,6 +9,7 @@ import createBlog from './dto/createBlog';
 import { UploadService } from 'src/upload/upload.service';
 import getBlogDTO from './dto/getBlogDTO';
 import updateBlogDTO from './dto/updateBlogDTO';
+import { UploadType } from 'src/upload/dto/typeUploadDTO';
 @Injectable()
 export class BlogService {
   constructor(
@@ -31,7 +32,7 @@ export class BlogService {
         throw new ConflictException('blog already exists');
       }
 
-      const urlFile = await this.uploadService.saveFile(file);
+      const urlFile = await this.uploadService.saveFile(file, UploadType.BLOG);
 
       const newBlog = await this.prisma.blog.create({
         data: {
@@ -170,11 +171,15 @@ export class BlogService {
 
       // delete file image in uploads
       if (blog.pic_of_blog && file) {
-        this.uploadService.deleteFile(blog.pic_of_blog);
+        this.uploadService.deleteFile(blog.pic_of_blog, UploadType.BLOG);
       }
-
       const urlFileFilter = file
-        ? { pic_of_blog: await this.uploadService.saveFile(file) }
+        ? {
+            pic_of_blog: await this.uploadService.saveFile(
+              file,
+              UploadType.BLOG,
+            ),
+          }
         : null;
 
       const data = {
