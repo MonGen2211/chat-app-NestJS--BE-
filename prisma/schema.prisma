@@ -35,6 +35,7 @@ model User {
   Blogs Blog[]
   statuss Status[]
   reacts React[]
+  comments comment[]
 
   sessions Session[] @relation("Session")
   createdAt DateTime @default(now())
@@ -89,6 +90,7 @@ model Blog {
 
   hanstags Hanstag[]
   reacts React[]
+  comments comment[]
   user_id Int
   user User @relation(fields: [user_id], references: [id])
 
@@ -104,6 +106,8 @@ model Status {
   user User @relation(fields: [user_id], references: [id])
   text String
   pic_of_status String?
+
+  comments comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime?
@@ -125,6 +129,21 @@ model React {
 
 model comment {
   id Int @id @default(autoincrement())
+
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
+
+  blog_id Int?
+  blog Blog? @relation(fields: [blog_id], references: [id])
+
+  status_id Int?
+  status Status? @relation(fields: [status_id], references: [id])
+
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime? 
 }
 
 model Hanstag {

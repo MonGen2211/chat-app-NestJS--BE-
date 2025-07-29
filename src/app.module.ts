@@ -9,6 +9,7 @@ import { MessageModule } from './message/message.module';
 import { BlogModule } from './blog/blog.module';
 import { UploadModule } from './upload/upload.module';
 import { StatusModule } from './status/status.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { StatusModule } from './status/status.module';
     BlogModule,
     UploadModule,
     StatusModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
