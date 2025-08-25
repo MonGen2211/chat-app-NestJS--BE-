@@ -171,4 +171,23 @@ export class UserService {
     const agent = userAgent.parse(userAgentString);
     return agent;
   }
+
+  async logout(userId: number) {
+    try {
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        throw new UnauthorizedException('Invalid user');
+      }
+
+      return { status: 200, message: 'Logout user successfully' };
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P202') {
+          throw new ConflictException();
+        }
+      }
+      throw error;
+    }
+  }
+
 }
