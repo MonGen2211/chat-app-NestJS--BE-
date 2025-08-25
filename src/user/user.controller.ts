@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUserDTO';
 import { loginUserDTO } from './dto/LoginUserDTO';
@@ -31,5 +31,15 @@ export class UserController {
     const user = req.user;
     const userId = user.sub;
     return this.userService.updateProfile(userId, dto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('logout')
+  logout(
+    @Req() req: Request & { user: { sub: number } },
+  ) {
+    const user = req.user;
+    const userId = user.sub;
+    return this.userService.logout(userId);
   }
 }
