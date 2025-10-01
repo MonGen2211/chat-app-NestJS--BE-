@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import createStatusDTO from './dto/createStatusDTO';
-import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+import { Prisma } from '@prisma/client';
+
 import UpdateStatusDTO from './dto/updateStatusDTO';
 import { UploadService } from 'src/upload/upload.service';
 import { UploadType } from 'src/upload/dto/typeUploadDTO';
@@ -43,7 +44,7 @@ export class StatusService {
         message: 'success',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -68,7 +69,7 @@ export class StatusService {
         success: true,
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -131,7 +132,7 @@ export class StatusService {
         message: 'Success',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -169,7 +170,7 @@ export class StatusService {
         message: 'Hide Status Successfully',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }

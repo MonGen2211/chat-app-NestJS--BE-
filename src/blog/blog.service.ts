@@ -3,13 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
 import { PrismaService } from 'src/prisma/prisma.service';
 import createBlog from './dto/createBlog';
 import { UploadService } from 'src/upload/upload.service';
 import getBlogDTO from './dto/getBlogDTO';
 import updateBlogDTO from './dto/updateBlogDTO';
 import { UploadType } from 'src/upload/dto/typeUploadDTO';
+import { Prisma } from '@prisma/client';
+
 @Injectable()
 export class BlogService {
   constructor(
@@ -50,7 +51,7 @@ export class BlogService {
         data: newBlog,
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -107,7 +108,7 @@ export class BlogService {
         message: 'success',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -135,7 +136,7 @@ export class BlogService {
         message: 'success',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -201,7 +202,7 @@ export class BlogService {
         data: updatedBlog,
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -237,7 +238,7 @@ export class BlogService {
         message: 'success',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }

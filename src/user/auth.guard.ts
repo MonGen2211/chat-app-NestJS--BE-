@@ -8,7 +8,7 @@ import {
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Phiên đăng nhập đã hết hạn');
       }
 
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }

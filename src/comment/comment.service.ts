@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { createCommentDTO } from './dto/createCommentDTO';
-import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+import { Prisma } from '@prisma/client';
 
+import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class CommentService {
   constructor(private prisma: PrismaService) {}
@@ -40,7 +40,7 @@ export class CommentService {
         message: 'success',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }

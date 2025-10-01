@@ -4,7 +4,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+// import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+import { Prisma } from '@prisma/client';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as CryptoJS from 'crypto-js';
 import MessageDTO from './dto/message.dto';
@@ -28,7 +30,7 @@ export class MessageService {
         message: 'Get Message Successfully',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -63,7 +65,7 @@ export class MessageService {
         message: 'Send Message Successfully',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
@@ -94,7 +96,7 @@ export class MessageService {
         message: 'Get All User Successfully',
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P202') {
           throw new ConflictException();
         }
