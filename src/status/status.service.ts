@@ -31,7 +31,7 @@ export class StatusService {
 
       const newStatus = await this.prisma.status.create({
         data: {
-          user_id: user_id,
+          user_id: user_id, 
           text: text,
           pic_of_status: urlFile,
           createdAt: new Date(),

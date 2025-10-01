@@ -7,6 +7,7 @@ import { createCommentDTO } from './dto/createCommentDTO';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { updateCommentDTO } from './dto/updateCommentDTO';
 @Injectable()
 export class CommentService {
   constructor(private prisma: PrismaService) {}
@@ -48,4 +49,43 @@ export class CommentService {
       throw error;
     }
   }
+
+	async updateComment(user_id: number, dto: updateCommentDTO) {
+		const { id, description, status_id, blog_id } = dto;
+		try {
+			const comment = await this.prisma.comment.findUnique({
+				where: {
+					id: Number(id),
+					user_id: user_id,
+				},
+			});
+
+			console.log(comment);
+			if(!comment) {
+				throw new NotFoundException('Comment not found or Blog not Found or Status not Found');
+			}
+
+			const updatedComment = await this.prisma.comment.update({
+				where: {
+					id: Number(id),
+				},
+				data: {
+					description: description,
+				}
+			});
+
+			return {
+				data: updatedComment,
+				status: 200,
+				message: 'success',	
+			}
+		} catch (error) {
+				if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P202') {
+          throw new ConflictException();
+        }
+      }
+      throw error;
+		}
+	}
 }
